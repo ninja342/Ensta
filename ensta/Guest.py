@@ -103,83 +103,82 @@ class Guest:
             "Referrer-Policy": "strict-origin-when-cross-origin"
         }
 
-        try:
-            session: requests.Session = __session__
-            if __session__ is None: session: requests.Session = self.request_session
-            p_url = f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}"
-            if self.scrape_url is not None:
-                p_url = self.scrape_url + p_url
-            http_response: requests.Response = session.get(
-                p_url,
-                headers=request_headers
-            )
-            response_json: dict = http_response.json()
-            print(http_response.text)
-            
-            if "status" in response_json:
-                if response_json["status"] == "ok" and "data" in response_json:
-                    if "user" in response_json["data"]:
-                        try:
-                            data: dict = response_json["data"]["user"]
+        session: requests.Session = __session__
+        if __session__ is None: session: requests.Session = self.request_session
+        p_url = f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}"
+        if self.scrape_url is not None:
+            p_url = self.scrape_url + p_url
+        http_response: requests.Response = session.get(
+            p_url,
+            headers=request_headers
+        )
+        response_json: dict = http_response.json()
+        print(response_json)
+        print(http_response.text)
 
-                            if data is None:
-                                return None
+        if "status" in response_json:
+            if response_json["status"] == "ok" and "data" in response_json:
+                if "user" in response_json["data"]:
+                    try:
+                        data: dict = response_json["data"]["user"]
 
-                            profile = Profile(
-                                biography=data["biography"],
-                                biography_links=data["bio_links"],
-                                country_block=data["country_block"],
-                                full_name=data["full_name"],
-                                follower_count=data["edge_followed_by"]["count"],
-                                following_count=data["edge_follow"]["count"],
-                                user_id=data["id"],
-                                is_business_account=data["is_business_account"],
-                                is_professional_account=data["is_professional_account"],
-                                is_supervision_enabled=data["is_supervision_enabled"],
-                                is_joined_recently=data["is_joined_recently"],
-                                is_private=data["is_private"],
-                                is_verified=data["is_verified"],
-                                profile_picture_url=data["profile_pic_url"],
-                                profile_picture_url_hd=data["profile_pic_url_hd"],
-                                pronouns=data["pronouns"],
-                                has_ar_effects=data["has_ar_effects"],
-                                has_clips=data["has_clips"],
-                                has_guides=data["has_guides"],
-                                has_channel=data["has_channel"],
-                                highlight_count=data["highlight_reel_count"],
-                                hide_like_and_view_counts=data["hide_like_and_view_counts"],
-                                is_embeds_disabled=data["is_embeds_disabled"],
-                                is_verified_by_mv4b=data["is_verified_by_mv4b"],
-                                should_show_category=data["should_show_category"],
-                                should_show_public_contacts=data["should_show_public_contacts"],
-                                show_account_transparency_details=data["show_account_transparency_details"],
-                                total_post_count=data["edge_owner_to_timeline_media"]["count"]
-                            )
+                        if data is None:
+                            return None
 
-                            if __session__ is not None:
-                                profile_host = ProfileHost()
+                        profile = Profile(
+                            biography=data["biography"],
+                            biography_links=data["bio_links"],
+                            country_block=data["country_block"],
+                            full_name=data["full_name"],
+                            follower_count=data["edge_followed_by"]["count"],
+                            following_count=data["edge_follow"]["count"],
+                            user_id=data["id"],
+                            is_business_account=data["is_business_account"],
+                            is_professional_account=data["is_professional_account"],
+                            is_supervision_enabled=data["is_supervision_enabled"],
+                            is_joined_recently=data["is_joined_recently"],
+                            is_private=data["is_private"],
+                            is_verified=data["is_verified"],
+                            profile_picture_url=data["profile_pic_url"],
+                            profile_picture_url_hd=data["profile_pic_url_hd"],
+                            pronouns=data["pronouns"],
+                            has_ar_effects=data["has_ar_effects"],
+                            has_clips=data["has_clips"],
+                            has_guides=data["has_guides"],
+                            has_channel=data["has_channel"],
+                            highlight_count=data["highlight_reel_count"],
+                            hide_like_and_view_counts=data["hide_like_and_view_counts"],
+                            is_embeds_disabled=data["is_embeds_disabled"],
+                            is_verified_by_mv4b=data["is_verified_by_mv4b"],
+                            should_show_category=data["should_show_category"],
+                            should_show_public_contacts=data["should_show_public_contacts"],
+                            show_account_transparency_details=data["show_account_transparency_details"],
+                            total_post_count=data["edge_owner_to_timeline_media"]["count"]
+                        )
 
-                                for key, value in dataclasses.asdict(profile).items():
-                                    setattr(profile_host, key, value)
+                        if __session__ is not None:
+                            profile_host = ProfileHost()
 
-                                profile_host.blocked_by_viewer = data["blocked_by_viewer"]
-                                profile_host.followed_by_viewer = data["followed_by_viewer"]
-                                profile_host.follows_viewer = data["follows_viewer"]
-                                profile_host.has_blocked_viewer = data["has_blocked_viewer"]
-                                profile_host.has_requested_viewer = data["has_requested_viewer"]
-                                profile_host.is_guardian_of_viewer = data["is_guardian_of_viewer"]
-                                profile_host.is_supervised_by_viewer = data["is_supervised_by_viewer"]
-                                profile_host.requested_by_viewer = data["requested_by_viewer"]
-                                profile_host.mutual_follower_count = data["edge_mutual_followed_by"]["count"]
+                            for key, value in dataclasses.asdict(profile).items():
+                                setattr(profile_host, key, value)
 
-                                return profile_host
+                            profile_host.blocked_by_viewer = data["blocked_by_viewer"]
+                            profile_host.followed_by_viewer = data["followed_by_viewer"]
+                            profile_host.follows_viewer = data["follows_viewer"]
+                            profile_host.has_blocked_viewer = data["has_blocked_viewer"]
+                            profile_host.has_requested_viewer = data["has_requested_viewer"]
+                            profile_host.is_guardian_of_viewer = data["is_guardian_of_viewer"]
+                            profile_host.is_supervised_by_viewer = data["is_supervised_by_viewer"]
+                            profile_host.requested_by_viewer = data["requested_by_viewer"]
+                            profile_host.mutual_follower_count = data["edge_mutual_followed_by"]["count"]
 
-                            return data
-                            # return profile
-                        except KeyError:
-                            raise APIError()
-        except JSONDecodeError:
-            return None
+                            return profile_host
+
+                        return data
+                        # return profile
+                    except KeyError:
+                        raise APIError()
+
 
     def get_uid(self, username: str) -> str | None:
         username: str = username.strip().lower().replace(" ", "")
