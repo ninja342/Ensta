@@ -24,6 +24,7 @@ class Guest:
 
     def __init__(self, scrape_url: str = None, homepage_source: str = None, app_id: str | int = None) -> None:
         update_session(self)
+        self.scrape_url = scrape_url
 
         if homepage_source is not None:
             self.homepage_source = homepage_source
