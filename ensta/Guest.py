@@ -169,7 +169,8 @@ class Guest:
 
                                 return profile_host
 
-                            return profile
+                            return data
+                            # return profile
                         except KeyError:
                             raise APIError()
         except JSONDecodeError:
