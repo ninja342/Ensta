@@ -108,7 +108,7 @@ class Guest:
             if __session__ is None: session: requests.Session = self.request_session
 
             http_response: requests.Response = session.get(
-                scrape_url + f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
+                self.scrape_url + f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
                 headers=request_headers
             )
             response_json: dict = http_response.json()
