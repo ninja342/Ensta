@@ -20,8 +20,9 @@ class Guest:
     homepage_source: str = None
     insta_app_id: str = None
     csrf_token: str = None
+    scrape_url: str = None
 
-    def __init__(self, homepage_source: str = None, app_id: str | int = None) -> None:
+    def __init__(self, scrape_url: str = None, homepage_source: str = None, app_id: str | int = None) -> None:
         update_session(self)
 
         if homepage_source is not None:
@@ -106,7 +107,7 @@ class Guest:
             if __session__ is None: session: requests.Session = self.request_session
 
             http_response: requests.Response = session.get(
-                f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
+                scrape_url + f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
                 headers=request_headers
             )
             response_json: dict = http_response.json()
