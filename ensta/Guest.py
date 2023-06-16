@@ -112,9 +112,9 @@ class Guest:
             p_url,
             headers=request_headers
         )
-        response_json: dict = http_response.json()
-        print(response_json)
         print(http_response.text)
+        response_json: dict = http_response.json()
+       
 
         if "status" in response_json:
             if response_json["status"] == "ok" and "data" in response_json:
