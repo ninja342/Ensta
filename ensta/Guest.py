@@ -115,6 +115,7 @@ class Guest:
             )
             response_json: dict = http_response.json()
             print(response_json)
+            print(http_response.text)
 
             if "status" in response_json:
                 if response_json["status"] == "ok" and "data" in response_json:
