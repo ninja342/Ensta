@@ -112,7 +112,6 @@ class Guest:
             p_url,
             headers=request_headers
         )
-        print(http_response.text)
         response_json: dict = http_response.json()
        
 
