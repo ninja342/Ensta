@@ -106,9 +106,11 @@ class Guest:
         try:
             session: requests.Session = __session__
             if __session__ is None: session: requests.Session = self.request_session
-
+            p_url = f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}"
+            if self.scrape_url is not None:
+                p_url = self.scrape_url + p_url
             http_response: requests.Response = session.get(
-                self.scrape_url + f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}",
+                p_url,
                 headers=request_headers
             )
             response_json: dict = http_response.json()
