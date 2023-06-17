@@ -78,6 +78,43 @@ class Guest:
         except JSONDecodeError:
             return None
 
+    def photo(self, username: str, photo_url: str, __session__: requests.Session | None = None):
+        username: str = format_username(username)
+        refresh_csrf_token(self)
+        request_headers: dict = {
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9",
+            "sec-ch-prefers-color-scheme": random.choice(["light", "dark"]),
+            "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
+            "sec-ch-ua-full-version-list": "\"Not.A/Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"114.0.5735.91\", \"Google Chrome\";v=\"114.0.5735.91\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"15.0.0\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "viewport-width": "1475",
+            "x-asbd-id": "198387",
+            "x-csrftoken": self.csrf_token,
+            "x-ig-app-id": self.insta_app_id,
+            "x-ig-www-claim": "0",
+            "x-requested-with": "XMLHttpRequest",
+            "Referer": f"https://www.instagram.com/{username}/",
+            "Referrer-Policy": "strict-origin-when-cross-origin"
+        }
+
+        session: requests.Session = __session__
+        if __session__ is None: session: requests.Session = self.request_session
+        p_url = photo_url
+        # if self.scrape_url is not None:
+            # p_url = self.scrape_url + p_url
+        http_response: requests.Response = session.get(
+            p_url,
+            headers=request_headers
+        )
+        return http_response
+
+
     def profile(self, username: str, __session__: requests.Session | None = None) -> Profile | ProfileHost | None:
         username: str = format_username(username)
         refresh_csrf_token(self)
